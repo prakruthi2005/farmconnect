@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Fresh Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles and animations */
+        
+
+        .bg-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .bg-primary {
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+        }
+
+        .text-accent {
+            color: #34d399;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-overlay text-primary-foreground min-h-screen">
+    <div id="login-page" class="flex items-center justify-center min-h-screen">
+        <!-- Login Page -->
+        <div class="bg-card p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-4">Login</h2>
+            <input type="text" id="username" placeholder="Username" class="w-full p-2 mb-4 border rounded-lg">
+            <input type="password" id="password" placeholder="Password" class="w-full p-2 mb-4 border rounded-lg">
+            <button onclick="login()" class="bg-primary text-white px-4 py-2 rounded-lg w-full">Login</button>
+        </div>
+    </div>
+
+    <div id="store-selection" class="hidden flex items-center justify-center min-h-screen">
+        <!-- Store Selection Page -->
+        <div class="bg-card p-6 rounded-lg shadow-md text-center">
+            <h2 class="text-2xl font-bold mb-4">Select Store</h2>
+            <button onclick="showFruitStore()" class="bg-primary text-white px-4 py-2 rounded-lg mb-4 w-full">Fruit Store</button>
+            <button onclick="showVegetableStore()" class="bg-primary text-white px-4 py-2 rounded-lg mb-4 w-full">Vegetable Store</button>
+        </div>
+    </div>
+
+    <div id="fruit-store" class="hidden p-4">
+        <!-- Fruit Store Page -->
+        <h2 class="text-2xl font-bold mb-4">Fruits</h2>
+        <button onclick="goBack()" class="bg-primary text-white px-4 py-2 rounded-lg mb-4">Go Back</button>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="bg-card p-4 rounded-lg">
+                <img src="images\apple.jpg">
+                <h3 class="text-lg font-bold">Apple</h3>
+                <p class="text-sm">1 kg = ₹50</p>
+                <button onclick="addToCart('Apple', 50)" class="bg-primary text-white px-4 py-2 rounded-lg mt-2">Add to Cart</button>
+            </div>
+            <div class="bg-card p-4 rounded-lg">
+                <h3 class="text-lg font-bold">Banana</h3>
+                <img src="images\banana.jpg">
+                <p class="text-sm">1 kg = ₹30</p>
+                <button onclick="addToCart('Banana', 30)" class="bg-primary text-white px-4 py-2 rounded-lg mt-2">Add to Cart</button>
+            </div>
+            <div class="bg-card p-4 rounded-lg">
+                <h3 class="text-lg font-bold">Grapes</h3>
+                <img src="images\grapes.jpg">
+                <p class="text-sm">1 kg = ₹70</p>
+                <button onclick="addToCart('Grapes', 70)" class="bg-primary text-white px-4 py-2 rounded-lg mt-2">Add to Cart</button>
+            </div>
+        </div>
+        <button onclick="goToPayment()" class="bg-primary text-white px-4 py-2 rounded-lg mt-8">Proceed to Payment</button>
+    </div>
+
+    <div id="vegetable-store" class="hidden p-4">
+        <!-- Vegetable Store Page -->
+        <h2 class="text-2xl font-bold mb-4">Vegetables</h2>
+        <button onclick="goBack()" class="bg-primary text-white px-4 py-2 rounded-lg mb-4">Go Back</button>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="bg-card p-4 rounded-lg">
+                <h3 class="text-lg font-bold">Carrot</h3>
+                <img src="images\carrot.jpg">
+                <p class="text-sm">1 kg = ₹20</p>
+                <button onclick="addToCart('Carrot', 20)" class="bg-primary text-white px-4 py-2 rounded-lg mt-2">Add to Cart</button>
+            </div>
+            <div class="bg-card p-4 rounded-lg">
+                <h3 class="text-lg font-bold">Broccoli</h3>
+                <img src="images\brocolli.jpg">
+                <p class="text-sm">1 kg = ₹60</p>
+                <button onclick="addToCart('Broccoli', 60)" class="bg-primary text-white px-4 py-2 rounded-lg mt-2">Add to Cart</button>
+            </div>
+            <div class="bg-card p-4 rounded-lg">
+                <h3 class="text-lg font-bold">Potato</h3>
+                <img src="images\potatoes.jpg">
+                <p class="text-sm">1 kg = ₹25</p>
+                <button onclick="addToCart('Potato', 25)" class="bg-primary text-white px-4 py-2 rounded-lg mt-2">Add to Cart</button>
+            </div>
+        </div>
+        <button onclick="goToPayment()" class="bg-primary text-white px-4 py-2 rounded-lg mt-8">Proceed to Payment</button>
+    </div>
+
+    <!-- Payment Section -->
+    <div id="payment-section" class="hidden bg-card p-4 rounded-lg shadow-md mt-8">
+        <h2 class="text-xl font-bold mb-4">Payment and Delivery</h2>
+        <div id="cart-items" class="mb-4"></div>
+        <div class="text-lg font-bold text-accent mb-4">Total: ₹<span id="total-price">0</span></div>
+
+        <!-- Location Sharing Section -->
+        <div class="mb-4">
+            <input type="text" id="manual-location" placeholder="Enter your location (address, landmark, or city)" class="w-full p-2 mb-4 border rounded-lg">
+            <button onclick="useManualLocation()" class="bg-primary text-white px-4 py-2 rounded-lg w-full">Submit Location</button>
+            <p id="location-status" class="mt-2 text-gray-600">Location not shared yet.</p>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="mb-4">
+            <h3 class="text-lg font-bold mb-2">Select Payment Method:</h3>
+            <select id="payment-method" class="w-full p-2 mb-4 border rounded-lg">
+                <option value="">Select a payment method</option>
+                <option value="PhonePe">PhonePe</option>
+                <option value="Google Pay">Google Pay</option>
+                <option value="Paytm">Paytm</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Debit Card">Debit Card</option>
+                <option value="Net Banking">Net Banking</option>
+                <option value="Cash on Delivery">Cash on Delivery</option>
+            </select>
+        </div>
+
+        <button id="confirm-payment-btn" class="bg-primary text-white px-4 py-2 rounded-lg w-full mt-4" onclick="confirmPayment()">Confirm Payment</button>
+    </div>
+
+    <div id="thank-you-page" class="hidden bg-overlay flex items-center justify-center min-h-screen">
+        <div class="bg-card p-6 rounded-lg text-center">
+            <h2 class="text-2xl font-bold mb-4">Thank You for Your Order!</h2>
+            <p class="mb-4">Your order has been placed successfully.</p>
+            <button onclick="restart()" class="bg-primary text-white px-4 py-2 rounded-lg">Start Over</button>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+        let totalPrice = 0;
+
+        function login() {
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('store-selection').classList.remove('hidden');
+        }
+
+        function showFruitStore() {
+            document.getElementById('store-selection').classList.add('hidden');
+            document.getElementById('fruit-store').classList.remove('hidden');
+        }
+
+        function showVegetableStore() {
+            document.getElementById('store-selection').classList.add('hidden');
+            document.getElementById('vegetable-store').classList.remove('hidden');
+        }
+
+        function goBack() {
+            document.getElementById('fruit-store').classList.add('hidden');
+            document.getElementById('vegetable-store').classList.add('hidden');
+            document.getElementById('store-selection').classList.remove('hidden');
+        }
+
+        function addToCart(productName, price) {
+            cart.push({ name: productName, price: price });
+            totalPrice += price;
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = cart.map(item => `<p>${item.name}: ₹${item.price}</p>`).join('');
+            document.getElementById('total-price').innerText = totalPrice;
+        }
+
+        function goToPayment() {
+            document.getElementById('fruit-store').classList.add('hidden');
+            document.getElementById('vegetable-store').classList.add('hidden');
+            document.getElementById('payment-section').classList.remove('hidden');
+        }
+
+        function useManualLocation() {
+            const manualLocation = document.getElementById('manual-location').value;
+            document.getElementById('location-status').innerText = `Location shared: ${manualLocation}`;
+            document.getElementById('manual-location').value = ''; // Clear input
+        }
+
+        function confirmPayment() {
+            const paymentMethod = document.getElementById('payment-method').value;
+            if (!paymentMethod) {
+                alert('Please select a payment method.');
+                return;
+            }
+            document.getElementById('payment-section').classList.add('hidden');
+            document.getElementById('thank-you-page').classList.remove('hidden');
+        }
+
+        function restart() {
+            cart = [];
+            totalPrice = 0;
+            document.getElementById('thank-you-page').classList.add('hidden');
+            document.getElementById('store-selection').classList.remove('hidden');
+        }
+    </script>
+</body>
+
+</html>
